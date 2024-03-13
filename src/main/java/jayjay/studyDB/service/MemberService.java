@@ -38,10 +38,7 @@ public class MemberService {
             if (memberEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
                 // 비밀번호 일치
                 // entity -> dto 변환 후 리턴
-                MemberDTO dto = MemberDTO.toMemberDTO(memberEntity);
-                return dto;
-
-//              return MemberDTO.toMemberDTO(memberEntity); 이렇게 축약 가능.
+                return MemberDTO.toMemberDTO(memberEntity);
             } else {
                 // 비밀번호 불일치(로그인실패)
                 return null;
@@ -64,20 +61,14 @@ public class MemberService {
 
     public MemberDTO findById(Long id) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(id);
-        if (optionalMemberEntity.isPresent()) {
-            return MemberDTO.toMemberDTO(optionalMemberEntity.get()); // 결과물을 컨트롤러로 리턴
-        } else {
-            return null;
-        }
+        // 결과물을 컨트롤러로 리턴
+        return optionalMemberEntity.map(MemberDTO::toMemberDTO).orElse(null);
     }
 
     public MemberDTO updateForm(String myEmail) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(myEmail);
-        if (optionalMemberEntity.isPresent()) {
-            return MemberDTO.toMemberDTO(optionalMemberEntity.get()); // optional 객체를 까서, DTO 로 변환해서 리턴하기!
-        } else {
-            return null;
-        }
+        // optional 객체를 까서, DTO 로 변환해서 리턴하기!
+        return optionalMemberEntity.map(MemberDTO::toMemberDTO).orElse(null);
     }
 
     public void update(MemberDTO memberDTO) {
